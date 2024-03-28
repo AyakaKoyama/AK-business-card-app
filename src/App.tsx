@@ -1,8 +1,14 @@
+import { ChakraProvider } from "@chakra-ui/react";
+import { Route, Routes } from "react-router-dom";
+import { Card } from "./Card";
+
 function App() {
   return (
-    <>
-      <h1>Hello World</h1>
-    </>
+    <ChakraProvider>
+      <Routes>
+        <Route path="/cards/:id/*" element={<Card />} />
+      </Routes>
+    </ChakraProvider>
   );
 }
 
