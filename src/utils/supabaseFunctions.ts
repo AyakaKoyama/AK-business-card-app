@@ -54,3 +54,20 @@ export const getUsersWithSkills = async () => {
   );
   return usersWithSkills;
 };
+//ここから下を追加
+export const addUsers = async () => {
+  const response = await supabase.from("users").insert("*").select();
+  if (response.data !== null) {
+    return response.data[0];
+  }
+};
+
+export const addUserSkills = async () => {
+  const response = await supabase
+    .from("user_skill")
+    .insert("skill_id")
+    .select();
+  if (response.data !== null) {
+    return response.data[0];
+  }
+};

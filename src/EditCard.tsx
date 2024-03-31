@@ -8,24 +8,56 @@ import {
   Input,
   Select,
 } from "@chakra-ui/react";
+import { useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { addUserSkills, addUsers } from "./utils/supabaseFunctions";
+import { User } from "./domain/user";
 
-type Inputs = {
+export type Inputs = {
   loginID: string;
   name: string;
   introduction: string;
   favoriteSkill: string;
+  githubId?: string;
+  qiitaId?: string;
+  xId?: string;
 };
 
-export const EditCard = () => {
+export const EditCard = ({
+  setUsers,
+}: {
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const favoriteSkillRef = useRef<HTMLSelectElement>(null);
 
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    console.log(data);
+    try {
+      const addUserData = await addUsers();
+      const addUserSkillData = await addUserSkills();
+      setUsers([
+        {
+          id: addUserData.loginID,
+          name: addUserData.name,
+          description: addUserData.introduction,
+          skills: addUserSkillData.favoriteSkill,
+          github_id: addUserData.githubId,
+          qiita_id: addUserData.qiitaId,
+          x_id: addUserData.xId,
+        },
+      ]);
+      console.log(addUserData);
+      console.log(addUserSkillData);
+    } catch (error) {
+      console.error("Failed to submit form data:", error);
+    }
+  };
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -72,7 +104,7 @@ export const EditCard = () => {
             <Select
               placeholder="好きな技術"
               name="favoriteSkill"
-              ref={register({ required: true })}
+              ref={favoriteSkillRef}
             >
               <option value="option1">React</option>
               <option value="option2">typeScript</option>
@@ -84,19 +116,27 @@ export const EditCard = () => {
           </FormControl>
         </Box>
         <Box p={3}>
-          <FormControl variant="floating" id="github-id">
+          <FormControl
+            variant="floating"
+            id="github-id"
+            isInvalid={!!errors.githubId}
+          >
             <FormLabel>Github ID</FormLabel>
             <Input placeholder="Github ID" />
           </FormControl>
         </Box>
         <Box p={3}>
-          <FormControl variant="floating" id="qiita-id">
+          <FormControl
+            variant="floating"
+            id="qiita-id"
+            isInvalid={!!errors.qiitaId}
+          >
             <FormLabel>Qiita ID</FormLabel>
             <Input placeholder="Qiita ID" />
           </FormControl>
         </Box>
         <Box p={3}>
-          <FormControl variant="floating" id="x-id">
+          <FormControl variant="floating" id="x-id" isInvalid={!!errors.xId}>
             <FormLabel>X ID</FormLabel>
             <Input placeholder="X ID" />
           </FormControl>

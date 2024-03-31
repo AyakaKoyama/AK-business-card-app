@@ -12,18 +12,13 @@ import {
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getUsersWithSkills } from "./utils/supabaseFunctions";
+import { User } from "./domain/user";
 
-interface User {
-  id: string;
-  name: string;
-  description: string;
-  skills: { id: number; name: string }[];
-  github_id: string;
-  qiita_id: string;
-  x_id: string;
+interface UserCardProps {
+  users: User[];
 }
 
-export const UserCard = () => {
+export const UserCard: React.FC<UserCardProps> = () => {
   const { id } = useParams();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
