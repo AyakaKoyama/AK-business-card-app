@@ -18,51 +18,63 @@ interface UserCardProps {
   users: User[];
 }
 
-export const UserCard: React.FC<UserCardProps> = () => {
-  const { id } = useParams();
-  const [users, setUsers] = useState<User[]>([]);
+export const UserCard: React.FC<UserCardProps> = ({ users }) => {
+  const { loginID } = useParams<{ loginID: string }>();
   const [loading, setLoading] = useState(false);
+  const [filteredUser, setFilteredUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const getUsers = async () => {
+    const fetchData = async () => {
       setLoading(true);
-      // idが文字列であることを確認
-      if (typeof id === "string") {
-        const usersWithSkills = await getUsersWithSkills();
-        console.log(usersWithSkills);
-        // 結果がnullまたは空の配列での場合
-        if (!usersWithSkills || usersWithSkills.length === 0) {
-          setUsers([]);
-          setLoading(false);
+      try {
+        // loginIDが一致するユーザーをフィルタリング
+        const filteredUser = users.find((user) => user.loginID === loginID);
+        if (!filteredUser) {
+          setFilteredUser(null);
           return;
         }
-        // 結果が配列の配列である場合は、フラット化する
-        const flattenedUsers = usersWithSkills.flat();
-        // 次に、null値をフィルタリングする
-        const validUsers = flattenedUsers.filter((user) => user !== null);
-        // 最後に、フィルタリングされた配列をusersに割り当てる
-        console.log(validUsers);
-        setUsers(validUsers as User[]);
-        setLoading(false);
-      } else {
-        // idが定義されていないか、文字列でない場合の処理
-        setUsers([]);
+        console.log(filteredUser);
+        setFilteredUser(filteredUser);
+
+        // idが文字列であることを確認
+        if (typeof loginID === "string") {
+          const usersWithSkills = await getUsersWithSkills();
+          console.log(usersWithSkills);
+          // 結果がnullまたは空の配列での場合
+          if (!usersWithSkills || usersWithSkills.length === 0) {
+            setLoading(false);
+            return;
+          }
+          // 結果が配列の配列である場合は、フラット化する
+          const flattenedUsers = usersWithSkills.flat();
+          // 次に、null値をフィルタリングする
+          const validUsers = flattenedUsers.filter((user) => user !== null);
+          // 最後に、フィルタリングされた配列をusersに割り当てる
+          console.log(validUsers);
+          setLoading(false);
+        } else {
+          // idが定義されていないか、文字列でない場合の処理
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
         setLoading(false);
       }
     };
-    getUsers();
-  }, [id]);
+
+    fetchData(); // データ取得関数を呼び出し
+  }, [loginID, users]);
 
   return (
     <>
-      {loading ? (
-        <Spinner />
-      ) : (
-        users.map((user) => (
-          <div key={user.loginID}>
+      <div key={filteredUser?.loginID}>
+        {loading ? (
+          <Spinner />
+        ) : filteredUser ? (
+          <div key={filteredUser.loginID}>
             <Card>
               <CardHeader>
-                <Heading size="md">{user.userName}</Heading>
+                <Heading size="md">{filteredUser.userName}</Heading>
               </CardHeader>
               <CardBody>
                 <Stack divider={<StackDivider />} spacing="4">
@@ -73,7 +85,7 @@ export const UserCard: React.FC<UserCardProps> = () => {
                     <Text pt="2" fontSize="sm">
                       <span
                         dangerouslySetInnerHTML={{
-                          __html: user.description,
+                          __html: filteredUser.description,
                         }}
                       />
                     </Text>
@@ -83,41 +95,53 @@ export const UserCard: React.FC<UserCardProps> = () => {
                       スキル
                     </Heading>
                     <Text pt="2" fontSize="sm">
-                      {user.favoriteSkill.flat().map((skill) => (
-                        <span key={skill.id}>{skill.name}</span>
-                      ))}
+                      {filteredUser.favoriteSkill &&
+                        Array.isArray(filteredUser.favoriteSkill) &&
+                        filteredUser.favoriteSkill
+                          .flat()
+                          .map((skill) => (
+                            <span key={skill.id}>{skill.name}</span>
+                          ))}
                     </Text>
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      <Link to="https://github.com/AyakaKoyama">Github ID</Link>
+                      <Link to={`https://github.com/${filteredUser.githubId}`}>
+                        Github ID
+                      </Link>
                     </Heading>
                     <Text pt="2" fontSize="sm">
-                      {user.githubId}
+                      {filteredUser.githubId}
                     </Text>
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      <Link to="https://qiita.com/AK_React">Qiita Id</Link>
+                      <Link to={`https://qiita.com/${filteredUser.qiitaId}`}>
+                        Qiita Id
+                      </Link>
                     </Heading>
                     <Text pt="2" fontSize="sm">
-                      {user.qiitaId}
+                      {filteredUser.qiitaId}
                     </Text>
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      <Link to="https://twitter.com/AK_React">X ID</Link>
+                      <Link to={`https://twitter.com/${filteredUser.xId}`}>
+                        X ID
+                      </Link>
                     </Heading>
                     <Text pt="2" fontSize="sm">
-                      {user.xId}
+                      {filteredUser.xId}
                     </Text>
                   </Box>
                 </Stack>
               </CardBody>
             </Card>
           </div>
-        ))
-      )}
+        ) : (
+          <div>該当するユーザーが見つかりません。</div>
+        )}
+      </div>
     </>
   );
 };
