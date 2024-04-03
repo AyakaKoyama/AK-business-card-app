@@ -59,10 +59,10 @@ export const UserCard: React.FC<UserCardProps> = () => {
         <Spinner />
       ) : (
         users.map((user) => (
-          <div key={user.id}>
+          <div key={user.loginID}>
             <Card>
               <CardHeader>
-                <Heading size="md">{user.name}</Heading>
+                <Heading size="md">{user.userName}</Heading>
               </CardHeader>
               <CardBody>
                 <Stack divider={<StackDivider />} spacing="4">
@@ -83,8 +83,8 @@ export const UserCard: React.FC<UserCardProps> = () => {
                       スキル
                     </Heading>
                     <Text pt="2" fontSize="sm">
-                      {user.skills.flat().map((skill) => (
-                        <span key={id}>{skill.name}</span>
+                      {user.favoriteSkill.flat().map((skill) => (
+                        <span key={skill.id}>{skill.name}</span>
                       ))}
                     </Text>
                   </Box>
@@ -93,7 +93,7 @@ export const UserCard: React.FC<UserCardProps> = () => {
                       <Link to="https://github.com/AyakaKoyama">Github ID</Link>
                     </Heading>
                     <Text pt="2" fontSize="sm">
-                      {user.github_id}
+                      {user.githubId}
                     </Text>
                   </Box>
                   <Box>
@@ -101,7 +101,7 @@ export const UserCard: React.FC<UserCardProps> = () => {
                       <Link to="https://qiita.com/AK_React">Qiita Id</Link>
                     </Heading>
                     <Text pt="2" fontSize="sm">
-                      {user.qiita_id}
+                      {user.qiitaId}
                     </Text>
                   </Box>
                   <Box>
@@ -109,7 +109,7 @@ export const UserCard: React.FC<UserCardProps> = () => {
                       <Link to="https://twitter.com/AK_React">X ID</Link>
                     </Heading>
                     <Text pt="2" fontSize="sm">
-                      {user.x_id}
+                      {user.xId}
                     </Text>
                   </Box>
                 </Stack>

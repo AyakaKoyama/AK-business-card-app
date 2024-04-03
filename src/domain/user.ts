@@ -1,9 +1,9 @@
 export interface User {
-  id: string;
-  name: string;
+  loginID: string;
+  userName: string;
   description: string;
-  skills: { id: number; name: string }[];
-  github_id?: string;
-  qiita_id?: string;
-  x_id?: string;
+  favoriteSkill: { id: number; name: string }[];
+  githubId?: string;
+  qiitaId?: string;
+  xId?: string;
 }

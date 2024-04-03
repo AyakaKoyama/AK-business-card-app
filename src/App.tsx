@@ -12,7 +12,7 @@ function App() {
     <ChakraProvider>
       <Routes>
         {/* UserCardにusersとsetUsersをpropsとして渡す */}
-        <Route path="/" element={<UserCard users={users} />} />
+        <Route path="/:id" element={<UserCard users={users} />} />
         {/* EditCardにsetUsersをpropsとして渡す */}
         <Route
           path="/cards/register"

@@ -8,15 +8,15 @@ import {
   Input,
   Select,
 } from "@chakra-ui/react";
-import { useRef } from "react";
+//import { useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { addUserSkills, addUsers } from "./utils/supabaseFunctions";
 import { User } from "./domain/user";
 
 export type Inputs = {
   loginID: string;
-  name: string;
-  introduction: string;
+  userName: string;
+  description: string;
   favoriteSkill: string;
   githubId?: string;
   qiitaId?: string;
@@ -34,22 +34,31 @@ export const EditCard = ({
     formState: { errors },
   } = useForm<Inputs>();
 
-  const favoriteSkillRef = useRef<HTMLSelectElement>(null);
+  //const favoriteSkillRef = useRef<HTMLSelectElement>(null);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    console.log(register("favoriteSkill"));
     console.log(data);
     try {
-      const addUserData = await addUsers();
-      const addUserSkillData = await addUserSkills();
+      const addUserData = await addUsers(
+        data.loginID,
+        data.userName,
+        data.description,
+        data.githubId,
+        data.qiitaId,
+        data.xId
+      );
+      console.log(data.githubId, data.qiitaId, data.xId);
+      const addUserSkillData = await addUserSkills(data.favoriteSkill);
       setUsers([
         {
-          id: addUserData.loginID,
-          name: addUserData.name,
-          description: addUserData.introduction,
-          skills: addUserSkillData.favoriteSkill,
-          github_id: addUserData.githubId,
-          qiita_id: addUserData.qiitaId,
-          x_id: addUserData.xId,
+          loginID: addUserData.loginID,
+          userName: addUserData.userName,
+          description: addUserData.description,
+          favoriteSkill: data.favoriteSkill,
+          githubId: addUserData.githubId,
+          qiitaId: addUserData.qiitaId,
+          xId: addUserData.xId,
         },
       ]);
       console.log(addUserData);
@@ -75,26 +84,26 @@ export const EditCard = ({
           </FormControl>
         </Box>
         <Box p={3}>
-          <FormControl isInvalid={!!errors.name} isRequired>
+          <FormControl isInvalid={!!errors.userName} isRequired>
             <FormLabel>名前</FormLabel>
             <Input
               placeholder="名前"
-              {...register("name", { required: true })}
+              {...register("userName", { required: true })}
             />
             <FormErrorMessage>
-              {errors.name && "名前の入力は必須です"}
+              {errors.userName && "名前の入力は必須です"}
             </FormErrorMessage>
           </FormControl>
         </Box>
         <Box p={3}>
-          <FormControl isInvalid={!!errors.introduction} isRequired>
+          <FormControl isInvalid={!!errors.description} isRequired>
             <FormLabel>自己紹介</FormLabel>
             <Input
               placeholder="htmlタグも使えます"
-              {...register("introduction", { required: true })}
+              {...register("description", { required: true })}
             />
             <FormErrorMessage>
-              {errors.introduction && "自己紹介の入力は必須です"}
+              {errors.description && "自己紹介の入力は必須です"}
             </FormErrorMessage>
           </FormControl>
         </Box>
@@ -103,12 +112,11 @@ export const EditCard = ({
             <FormLabel>好きな技術</FormLabel>
             <Select
               placeholder="好きな技術"
-              name="favoriteSkill"
-              ref={favoriteSkillRef}
+              {...register("favoriteSkill", { required: true })}
             >
-              <option value="option1">React</option>
-              <option value="option2">typeScript</option>
-              <option value="option3">Github</option>
+              <option value="1">React</option>
+              <option value="2">typeScript</option>
+              <option value="3">Github</option>
             </Select>
             {errors.favoriteSkill && (
               <FormErrorMessage>選択は必須です</FormErrorMessage>
@@ -122,7 +130,7 @@ export const EditCard = ({
             isInvalid={!!errors.githubId}
           >
             <FormLabel>Github ID</FormLabel>
-            <Input placeholder="Github ID" />
+            <Input placeholder="Github ID" {...register("githubId")} />
           </FormControl>
         </Box>
         <Box p={3}>
@@ -132,13 +140,13 @@ export const EditCard = ({
             isInvalid={!!errors.qiitaId}
           >
             <FormLabel>Qiita ID</FormLabel>
-            <Input placeholder="Qiita ID" />
+            <Input placeholder="Qiita ID" {...register("qiitaId")} />
           </FormControl>
         </Box>
         <Box p={3}>
           <FormControl variant="floating" id="x-id" isInvalid={!!errors.xId}>
             <FormLabel>X ID</FormLabel>
-            <Input placeholder="X ID" />
+            <Input placeholder="X ID" {...register("xId")} />
           </FormControl>
         </Box>
         <Button type="submit" colorScheme="green">
