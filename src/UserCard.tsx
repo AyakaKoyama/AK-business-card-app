@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getUsersWithSkills } from "./utils/supabaseFunctions";
+import { getAllUsers } from "./utils/supabaseFunctions";
 import { User } from "./domain/user";
 
 interface UserCardProps {
@@ -25,39 +25,27 @@ export const UserCard: React.FC<UserCardProps> = ({ users }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!loginID) {
+        return;
+      }
       setLoading(true);
-      try {
-        // loginIDが一致するユーザーをフィルタリング
-        const filteredUser = users.find((user) => user.loginID === loginID);
-        if (!filteredUser) {
-          setFilteredUser(null);
-          return;
-        }
-        console.log(filteredUser);
-        setFilteredUser(filteredUser);
 
-        // idが文字列であることを確認
-        if (typeof loginID === "string") {
-          const usersWithSkills = await getUsersWithSkills();
-          console.log(usersWithSkills);
-          // 結果がnullまたは空の配列での場合
-          if (!usersWithSkills || usersWithSkills.length === 0) {
-            setLoading(false);
-            return;
-          }
-          // 結果が配列の配列である場合は、フラット化する
-          const flattenedUsers = usersWithSkills.flat();
-          // 次に、null値をフィルタリングする
-          const validUsers = flattenedUsers.filter((user) => user !== null);
-          // 最後に、フィルタリングされた配列をusersに割り当てる
-          console.log(validUsers);
-          setLoading(false);
-        } else {
-          // idが定義されていないか、文字列でない場合の処理
-          setLoading(false);
-        }
+      try {
+        const userData = await getAllUsers(loginID);
+        const user = new User(
+          userData.id,
+          userData.name,
+          userData.description,
+          [],
+          userData.github_id,
+          userData.qiita_id,
+          userData.x_id
+        );
+        console.log(user);
+        setFilteredUser(user);
+        setLoading(false);
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error("Failed to get user data:", error);
         setLoading(false);
       }
     };
