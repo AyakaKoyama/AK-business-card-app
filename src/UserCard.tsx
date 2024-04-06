@@ -11,8 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getAllUsers } from "./utils/supabaseFunctions";
-import { User } from "./domain/user";
+import { getAllUsers, getUserSkills } from "./utils/supabaseFunctions";
+import { FavoriteSkill, User } from "./domain/user";
 
 interface UserCardProps {
   users: User[];
@@ -32,15 +32,27 @@ export const UserCard: React.FC<UserCardProps> = ({ users }) => {
 
       try {
         const userData = await getAllUsers(loginID);
+        //スキル取得
+        const skillData = await getUserSkills(loginID);
+
+        if (!userData || !skillData) {
+          console.error("Failed to fetch user or skill data");
+          return;
+        }
+
+        //クラス定義からインスタンスを作成
+        const skill = new FavoriteSkill(skillData.id, skillData.name);
+
         const user = new User(
           userData.id,
           userData.name,
           userData.description,
-          [],
+          skill,
           userData.github_id,
           userData.qiita_id,
           userData.x_id
         );
+
         console.log(user);
         setFilteredUser(user);
         setLoading(false);
@@ -52,6 +64,7 @@ export const UserCard: React.FC<UserCardProps> = ({ users }) => {
 
     fetchData(); // データ取得関数を呼び出し
   }, [loginID, users]);
+  console.log(filteredUser);
 
   return (
     <>
@@ -83,13 +96,9 @@ export const UserCard: React.FC<UserCardProps> = ({ users }) => {
                       スキル
                     </Heading>
                     <Text pt="2" fontSize="sm">
-                      {filteredUser.favoriteSkill &&
-                        Array.isArray(filteredUser.favoriteSkill) &&
-                        filteredUser.favoriteSkill
-                          .flat()
-                          .map((skill) => (
-                            <span key={skill.id}>{skill.name}</span>
-                          ))}
+                      {filteredUser.favoriteSkill
+                        ? filteredUser.favoriteSkill.name
+                        : "スキルなし"}
                     </Text>
                   </Box>
                   <Box>

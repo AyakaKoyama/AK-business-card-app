@@ -6,15 +6,6 @@ export const getAllUsers = async (id: string) => {
   return users.data;
 };
 
-export const getAllSkills = async () => {
-  const skills = await supabase.from("skills").select("*");
-  return skills.data;
-};
-export const getAllUserSkills = async () => {
-  const userSkills = await supabase.from("user_skill").select("*");
-  return userSkills.data;
-};
-
 // ユーザーIDに基づいてユーザーのスキルを取得する関数
 export const getUserSkills = async (userId: string) => {
   try {
@@ -23,27 +14,25 @@ export const getUserSkills = async (userId: string) => {
     const userSkills = await supabase
       .from("user_skill")
       .select("skill_id")
-      .eq("user_id", userId);
+      .eq("user_id", userId)
+      .single();
+
     console.log(userSkills);
 
-    // スキル情報を格納する配列を用意
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const skills: any[] = [];
-
-    // 取得したスキル情報をループして配列に追加
-    for (const userSkill of userSkills.data || []) {
-      const skill = await supabase
-        .from("skills")
-        .select("name")
-        .eq("id", userSkill.skill_id);
-      // 取得したスキル情報を配列に追加
-      skills.push(skill.data);
+    if (userSkills.error || !userSkills.data) {
+      console.error("Failed to get user skills:", userSkills.error);
+      return;
     }
-    // ネストされた配列をフラット化して返す
-    return skills.flat();
+
+    const skill = await supabase
+      .from("skills")
+      .select("*")
+      .eq("id", userSkills.data.skill_id)
+      .single();
+    console.log(skill);
+    return skill.data;
   } catch (error) {
     console.error("Failed to get user skills:", error);
-    return [];
   }
 };
 
