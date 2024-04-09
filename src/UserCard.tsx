@@ -32,16 +32,19 @@ export const UserCard: React.FC<UserCardProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       if (!loginID) {
+        setUserNotFound(true);
         return;
       }
       setLoading(true);
 
       try {
+        setUserNotFound(false);
         const userData = await getAllUsers(loginID);
         //スキル取得
         const skillData = await getUserSkills(loginID);
 
         if (!userData || !skillData) {
+          setUserNotFound(true);
           console.error("Failed to fetch user or skill data");
           return;
         }
@@ -65,7 +68,6 @@ export const UserCard: React.FC<UserCardProps> = ({
       } catch (error) {
         console.error("Failed to get user data:", error);
         setLoading(false);
-        setUserNotFound(true);
       }
     };
 
@@ -148,7 +150,7 @@ export const UserCard: React.FC<UserCardProps> = ({
             </Card>
           </div>
         ) : (
-          <div>該当するユーザーが見つかりません。</div>
+          <Text color="red">該当するユーザーが見つかりません。</Text>
         )}
       </div>
     </>
