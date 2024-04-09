@@ -90,13 +90,30 @@ export async function addUsers(
   }
 }
 
-export async function addUserSkills(skill_id: string) {
-  const response = await supabase
-    .from("user_skill")
-    .insert([{ skill_id }])
-    .select();
-  console.log(response);
-  if (response.data !== null) {
-    return response.data[0];
+export async function addUserSkills(user_id: string, skill_id: string) {
+  try {
+    //取得したfavoriteSkillIDをuser_skillテーブルに追加
+    const userSkills = await supabase
+      .from("user_skill")
+      .insert([{ user_id, skill_id }])
+      .select();
+    console.log(userSkills);
+
+    if (userSkills.error || !userSkills.data) {
+      console.error("Failed to get user skills:", userSkills.error);
+      return;
+    }
+
+    //user_skillテーブルに追加したskill_idを元にskillsテーブルからスキル情報を取得
+    const skill = await supabase
+      .from("skills")
+      .select("*")
+      .eq("id", skill_id)
+      .single();
+    console.log(skill);
+
+    return skill.data;
+  } catch (error) {
+    console.error("Failed to insert user skills:", error);
   }
 }

@@ -12,12 +12,13 @@ import {
 import { SubmitHandler, useForm } from "react-hook-form";
 import { addUserSkills, addUsers } from "./utils/supabaseFunctions";
 import { User } from "./domain/user";
+import { useNavigate } from "react-router-dom";
 
 export type Inputs = {
   loginID: string;
   userName: string;
   description: string;
-  favoriteSkill: string;
+  favoriteSkillID: string;
   githubId?: string;
   qiitaId?: string;
   xId?: string;
@@ -34,11 +35,10 @@ export const EditCard = ({
     formState: { errors },
   } = useForm<Inputs>();
 
-  //const favoriteSkillRef = useRef<HTMLSelectElement>(null);
-
+  const navigate = useNavigate();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log(register("favoriteSkill"));
     console.log(data);
+
     try {
       const addUserData = await addUsers(
         data.loginID,
@@ -49,13 +49,20 @@ export const EditCard = ({
         data.xId
       );
       console.log(data.githubId, data.qiitaId, data.xId);
-      const addUserSkillData = await addUserSkills(data.favoriteSkill);
+
+      //スキルIDを追加
+      const addUserSkillData = await addUserSkills(
+        data.loginID,
+        data.favoriteSkillID
+      );
+      console.log(addUserSkillData);
+
       setUsers([
         {
           loginID: addUserData.loginID,
           userName: addUserData.userName,
           description: addUserData.description,
-          favoriteSkill: data.favoriteSkill,
+          favoriteSkill: addUserSkillData.favoriteSkillID,
           githubId: addUserData.githubId,
           qiitaId: addUserData.qiitaId,
           xId: addUserData.xId,
@@ -63,6 +70,7 @@ export const EditCard = ({
       ]);
       console.log(addUserData);
       console.log(addUserSkillData);
+      navigate(`/`);
     } catch (error) {
       console.error("Failed to submit form data:", error);
     }
@@ -108,17 +116,17 @@ export const EditCard = ({
           </FormControl>
         </Box>
         <Box p={3}>
-          <FormControl isInvalid={!!errors.favoriteSkill} isRequired>
+          <FormControl isInvalid={!!errors.favoriteSkillID} isRequired>
             <FormLabel>好きな技術</FormLabel>
             <Select
               placeholder="好きな技術"
-              {...register("favoriteSkill", { required: true })}
+              {...register("favoriteSkillID", { required: true })}
             >
               <option value="1">React</option>
               <option value="2">typeScript</option>
               <option value="3">Github</option>
             </Select>
-            {errors.favoriteSkill && (
+            {errors.favoriteSkillID && (
               <FormErrorMessage>選択は必須です</FormErrorMessage>
             )}
           </FormControl>

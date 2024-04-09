@@ -8,20 +8,26 @@ import {
   StackDivider,
   Text,
   Card,
+  Button,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getAllUsers, getUserSkills } from "./utils/supabaseFunctions";
 import { FavoriteSkill, User } from "./domain/user";
 
 interface UserCardProps {
   users: User[];
+  setUserNotFound: (flag: boolean) => void;
 }
 
-export const UserCard: React.FC<UserCardProps> = ({ users }) => {
+export const UserCard: React.FC<UserCardProps> = ({
+  users,
+  setUserNotFound,
+}) => {
   const { loginID } = useParams<{ loginID: string }>();
   const [loading, setLoading] = useState(false);
   const [filteredUser, setFilteredUser] = useState<User | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,12 +65,17 @@ export const UserCard: React.FC<UserCardProps> = ({ users }) => {
       } catch (error) {
         console.error("Failed to get user data:", error);
         setLoading(false);
+        setUserNotFound(true);
       }
     };
 
     fetchData(); // データ取得関数を呼び出し
-  }, [loginID, users]);
+  }, [loginID, users, setUserNotFound]);
   console.log(filteredUser);
+
+  const handleBack = () => {
+    navigate("/"); // ホーム画面に戻る
+  };
 
   return (
     <>
@@ -133,6 +144,7 @@ export const UserCard: React.FC<UserCardProps> = ({ users }) => {
                   </Box>
                 </Stack>
               </CardBody>
+              <Button onClick={handleBack}>戻る</Button>
             </Card>
           </div>
         ) : (
