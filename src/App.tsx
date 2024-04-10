@@ -1,52 +1,44 @@
-import { ChakraProvider, Heading, Text } from "@chakra-ui/react";
-import { Route, Routes, useNavigate } from "react-router-dom";
-import { UserCard } from "./UserCard";
-import { EditCard } from "./EditCard";
+import { Heading, Text } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { User } from "./domain/user";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SearchCard } from "./SearchCard";
+import { User } from "./domain/user";
+import { Router } from "./Router";
 
 type Inputs = {
   searchID: string;
 };
 function App() {
   const { reset } = useForm<Inputs>();
-  const [users, setUsers] = useState<User[]>([]);
   const navigate = useNavigate();
   //エラーフラグ
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userNotFound, setUserNotFound] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
 
   // 検索ボタンがクリックされたときの処理
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const { searchID } = data;
-    navigate(`/${searchID}`);
-    //resetされない
     reset();
+    navigate(`/${searchID}`);
   };
 
   return (
-    <ChakraProvider>
-      <Routes>
-        {/* UserCardにusersとsetUsersをpropsとして渡す*/}
-        <Route
-          path="/:loginID"
-          element={<UserCard users={users} setUserNotFound={setUserNotFound} />}
-        />
-        {/* EditCardにsetUsersをpropsとして渡す */}
-        <Route
-          path="/cards/register"
-          element={<EditCard setUsers={setUsers} />}
-        />
-      </Routes>
-      {/* どの画面に遷移しても毎回検索欄が表示されちゃう！*/}
+    <>
       <Heading>ユーザー検索</Heading>
       <SearchCard onSubmit={onSubmit} />
       {/* エラーメッセージ */}
       {userNotFound && (
         <Text color="red">該当するユーザーが見つかりません。</Text>
       )}
-    </ChakraProvider>
+      {/* ルーティング部分 */}
+      <Router
+        users={users}
+        setUsers={setUsers}
+        setUserNotFound={setUserNotFound}
+      />
+    </>
   );
 }
 
