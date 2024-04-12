@@ -15,19 +15,19 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { getAllUsers, getUserSkills } from "./utils/supabaseFunctions";
 import { FavoriteSkill, User } from "./domain/user";
 
-interface UserCardProps {
-  users: User[];
-  setUserNotFound: (flag: boolean) => void;
-}
+// interface UserCardProps {
+//   users: User[];
+//   setUserNotFound: (flag: boolean) => void;
+// }
 
-export const UserCard: React.FC<UserCardProps> = ({
-  users,
-  setUserNotFound,
-}) => {
+export const UserCard: React.FC = () => {
   const { loginID } = useParams<{ loginID: string }>();
   const [loading, setLoading] = useState(false);
   const [filteredUser, setFilteredUser] = useState<User | null>(null);
   const navigate = useNavigate();
+  //エラーフラグ
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [userNotFound, setUserNotFound] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,11 +72,11 @@ export const UserCard: React.FC<UserCardProps> = ({
     };
 
     fetchData(); // データ取得関数を呼び出し
-  }, [loginID, users, setUserNotFound]);
+  }, [loginID]);
   console.log(filteredUser);
 
   const handleBack = () => {
-    navigate("/"); // ホーム画面に戻る
+    navigate("/");
   };
 
   return (

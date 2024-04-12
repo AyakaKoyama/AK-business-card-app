@@ -8,11 +8,11 @@ import {
   Input,
   Select,
 } from "@chakra-ui/react";
-//import { useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { addUserSkills, addUsers } from "./utils/supabaseFunctions";
 import { User } from "./domain/user";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export type Inputs = {
   loginID: string;
@@ -24,18 +24,16 @@ export type Inputs = {
   xId?: string;
 };
 
-export const EditCard = ({
-  setUsers,
-}: {
-  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
-}) => {
+export const EditCard = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
-
   const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [users, setUsers] = useState<User[]>([]);
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
 

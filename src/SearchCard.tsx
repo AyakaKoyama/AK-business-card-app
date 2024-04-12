@@ -4,23 +4,33 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Text,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 export type Inputs = {
   searchID: string;
 };
 
-export interface SearchCardProps {
-  onSubmit: SubmitHandler<Inputs>;
-}
-
-export const SearchCard: React.FC<SearchCardProps> = ({ onSubmit }) => {
+export const SearchCard: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<Inputs>();
+  const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [userNotFound, setUserNotFound] = useState(false);
+
+  // 検索ボタンがクリックされたときの処理
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    const { searchID } = data;
+    reset();
+    navigate(`/${searchID}`);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -39,6 +49,10 @@ export const SearchCard: React.FC<SearchCardProps> = ({ onSubmit }) => {
       <Button colorScheme="green" type="submit">
         検索
       </Button>
+      {/* エラーメッセージ */}
+      {userNotFound && (
+        <Text color="red">該当するユーザーが見つかりません。</Text>
+      )}
     </form>
   );
 };
