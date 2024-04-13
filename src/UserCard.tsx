@@ -14,6 +14,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getAllUsers, getUserSkills } from "./utils/supabaseFunctions";
 import { FavoriteSkill, User } from "./domain/user";
+import { AiFillGithub } from "react-icons/ai";
+import { FaSquareXTwitter } from "react-icons/fa6";
+import { SiQiita } from "react-icons/si";
 
 // interface UserCardProps {
 //   users: User[];
@@ -25,26 +28,21 @@ export const UserCard: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [filteredUser, setFilteredUser] = useState<User | null>(null);
   const navigate = useNavigate();
-  //エラーフラグ
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [userNotFound, setUserNotFound] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!loginID) {
-        setUserNotFound(true);
         return;
       }
+      console.log(loginID);
       setLoading(true);
 
       try {
-        setUserNotFound(false);
         const userData = await getAllUsers(loginID);
         //スキル取得
         const skillData = await getUserSkills(loginID);
 
         if (!userData || !skillData) {
-          setUserNotFound(true);
           console.error("Failed to fetch user or skill data");
           return;
         }
@@ -86,6 +84,7 @@ export const UserCard: React.FC = () => {
           <Spinner />
         ) : filteredUser ? (
           <div key={filteredUser.loginID}>
+            <Heading data-testid="title">ユーザー情報</Heading>
             <Card>
               <CardHeader>
                 <Heading size="md">{filteredUser.userName}</Heading>
@@ -117,7 +116,7 @@ export const UserCard: React.FC = () => {
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
                       <Link to={`https://github.com/${filteredUser.githubId}`}>
-                        Github ID
+                        <AiFillGithub />
                       </Link>
                     </Heading>
                     <Text pt="2" fontSize="sm">
@@ -127,7 +126,7 @@ export const UserCard: React.FC = () => {
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
                       <Link to={`https://qiita.com/${filteredUser.qiitaId}`}>
-                        Qiita Id
+                        <SiQiita />
                       </Link>
                     </Heading>
                     <Text pt="2" fontSize="sm">
@@ -137,7 +136,7 @@ export const UserCard: React.FC = () => {
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
                       <Link to={`https://twitter.com/${filteredUser.xId}`}>
-                        X ID
+                        <FaSquareXTwitter />
                       </Link>
                     </Heading>
                     <Text pt="2" fontSize="sm">
