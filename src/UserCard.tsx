@@ -18,11 +18,6 @@ import { AiFillGithub } from "react-icons/ai";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { SiQiita } from "react-icons/si";
 
-// interface UserCardProps {
-//   users: User[];
-//   setUserNotFound: (flag: boolean) => void;
-// }
-
 export const UserCard: React.FC = () => {
   const { loginID } = useParams<{ loginID: string }>();
   const [loading, setLoading] = useState(false);
@@ -84,10 +79,11 @@ export const UserCard: React.FC = () => {
           <Spinner />
         ) : filteredUser ? (
           <div key={filteredUser.loginID}>
-            <Heading data-testid="title">ユーザー情報</Heading>
             <Card>
               <CardHeader>
-                <Heading size="md">{filteredUser.userName}</Heading>
+                <Heading data-testid="userName" size="md">
+                  {filteredUser.userName}
+                </Heading>
               </CardHeader>
               <CardBody>
                 <Stack divider={<StackDivider />} spacing="4">

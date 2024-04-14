@@ -24,14 +24,13 @@ export type Inputs = {
   xId?: string;
 };
 
-export const EditCard = () => {
+export const RegisterCard = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [users, setUsers] = useState<User[]>([]);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -66,8 +65,7 @@ export const EditCard = () => {
           xId: addUserData.xId,
         },
       ]);
-      console.log(addUserData);
-      console.log(addUserSkillData);
+      console.log(users);
       navigate(`/`);
     } catch (error) {
       console.error("Failed to submit form data:", error);
