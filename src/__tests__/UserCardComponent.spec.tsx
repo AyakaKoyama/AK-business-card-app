@@ -8,8 +8,8 @@ const mockgetUsers = jest
   .fn()
   .mockResolvedValue(
     new User(
-      "1",
-      "userName",
+      "ww",
+      "Ayaka",
       "description",
       { id: 1, name: "React" },
       "github",
@@ -19,11 +19,14 @@ const mockgetUsers = jest
   );
 jest.mock("../utils/supabaseFunctions", () => {
   return {
-    getAllUsers: () => mockgetUsers(),
+    getAllUsers: (loginID: string) => mockgetUsers(loginID), // ログインIDを引数に取るように修正
   };
 });
-//現在mock情報がnullになってしまう
-console.log(mockgetUsers);
+// テスト用のログインIDを返すようにモック化
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useParams: () => ({ loginID: "ww" }),
+}));
 test("ユーザー名が表示されていること", async () => {
   //<BrowserRouter>で囲む
   render(
