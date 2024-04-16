@@ -21,6 +21,7 @@ import { SiQiita } from "react-icons/si";
 export const UserCard: React.FC = () => {
   const { loginID } = useParams<{ loginID: string }>();
   const [loading, setLoading] = useState(false);
+  //テスト時にnullになってしまう
   const [filteredUser, setFilteredUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
@@ -66,12 +67,14 @@ export const UserCard: React.FC = () => {
 
     fetchData(); // データ取得関数を呼び出し
   }, [loginID]);
+  //テスト時null
   console.log(filteredUser);
 
   const handleBack = () => {
     navigate("/");
   };
 
+  //filteredUserでユーザー情報の有無を判定
   return (
     <>
       <div key={filteredUser?.loginID}>
@@ -91,7 +94,7 @@ export const UserCard: React.FC = () => {
                     <Heading size="xs" textTransform="uppercase">
                       自己紹介
                     </Heading>
-                    <Text pt="2" fontSize="sm">
+                    <Text data-testid="description" pt="2" fontSize="sm">
                       <span
                         dangerouslySetInnerHTML={{
                           __html: filteredUser.description,
@@ -103,7 +106,7 @@ export const UserCard: React.FC = () => {
                     <Heading size="xs" textTransform="uppercase">
                       スキル
                     </Heading>
-                    <Text pt="2" fontSize="sm">
+                    <Text data-testid="skill" pt="2" fontSize="sm">
                       {filteredUser.favoriteSkill
                         ? filteredUser.favoriteSkill.name
                         : "スキルなし"}
@@ -112,7 +115,7 @@ export const UserCard: React.FC = () => {
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
                       <Link to={`https://github.com/${filteredUser.githubId}`}>
-                        <AiFillGithub />
+                        <AiFillGithub data-testid="github-icon" />
                       </Link>
                     </Heading>
                     <Text pt="2" fontSize="sm">
@@ -122,7 +125,7 @@ export const UserCard: React.FC = () => {
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
                       <Link to={`https://qiita.com/${filteredUser.qiitaId}`}>
-                        <SiQiita />
+                        <SiQiita data-testid="qiita-icon" />
                       </Link>
                     </Heading>
                     <Text pt="2" fontSize="sm">
@@ -132,7 +135,7 @@ export const UserCard: React.FC = () => {
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
                       <Link to={`https://twitter.com/${filteredUser.xId}`}>
-                        <FaSquareXTwitter />
+                        <FaSquareXTwitter data-testid="x-icon" />
                       </Link>
                     </Heading>
                     <Text pt="2" fontSize="sm">
@@ -141,7 +144,9 @@ export const UserCard: React.FC = () => {
                   </Box>
                 </Stack>
               </CardBody>
-              <Button onClick={handleBack}>戻る</Button>
+              <Button data-testid="back-button" onClick={handleBack}>
+                戻る
+              </Button>
             </Card>
           </div>
         ) : (
