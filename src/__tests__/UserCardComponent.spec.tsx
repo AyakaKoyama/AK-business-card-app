@@ -22,23 +22,27 @@ const mockgetUsers = jest
 const mockgetUserSkills = jest.fn().mockResolvedValue({ id: 1, name: "React" });
 jest.mock("../utils/supabaseFunctions", () => {
   return {
-    getAllUsers: (loginID: string) => mockgetUsers(loginID), // ログインIDを引数に取るように修正
+    getAllUsers: (loginID: string) => mockgetUsers(loginID),
     getUserSkills: (userId: string) => mockgetUserSkills(userId),
   };
 });
 
 // useParamsモック
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useParams: () => ({ loginID: "ww" }),
-}));
-
-// Navigatorモック
 const mockedNavigator = jest.fn();
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useNavigate: () => mockedNavigator,
+  useParams: () => ({ loginID: "ww" }),
 }));
+//現在mock情報がnullになってしまう
+console.log(mockgetUsers);
+
+// // Navigatorモック
+// const mockedNavigator = jest.fn();
+// jest.mock("react-router-dom", () => ({
+//   ...jest.requireActual("react-router-dom"),
+//   useNavigate: () => mockedNavigator,
+// }));
 
 test("UserCardコンポーネントの表示が正しいこと", async () => {
   render(
