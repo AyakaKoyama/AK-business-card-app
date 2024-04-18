@@ -36,14 +36,14 @@ export const getUserSkills = async (userId: string) => {
   }
 };
 
-export async function addUsers(
+export const addUserRecords = async (
   id: string,
   name: string,
   description: string,
   github_id?: string,
   qiita_id?: string,
   x_id?: string
-) {
+) => {
   // 未入力の場合、デフォルトの値（空の文字列）に変換する
   const normalizedGithubId = github_id ?? "";
   const normalizedQiitaId = qiita_id ?? "";
@@ -65,9 +65,9 @@ export async function addUsers(
   if (response.data !== null) {
     return response.data[0];
   }
-}
+};
 
-export async function addUserSkills(user_id: string, skill_id: string) {
+export const addUserSkills = async (user_id: string, skill_id: string) => {
   try {
     //取得したfavoriteSkillIDをuser_skillテーブルに追加
     const userSkills = await supabase
@@ -93,4 +93,4 @@ export async function addUserSkills(user_id: string, skill_id: string) {
   } catch (error) {
     console.error("Failed to insert user skills:", error);
   }
-}
+};

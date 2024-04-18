@@ -34,15 +34,6 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockedNavigator,
   useParams: () => ({ loginID: "ww" }),
 }));
-//現在mock情報がnullになってしまう
-console.log(mockgetUsers);
-
-// // Navigatorモック
-// const mockedNavigator = jest.fn();
-// jest.mock("react-router-dom", () => ({
-//   ...jest.requireActual("react-router-dom"),
-//   useNavigate: () => mockedNavigator,
-// }));
 
 test("UserCardコンポーネントの表示が正しいこと", async () => {
   render(
@@ -71,7 +62,6 @@ test("UserCardコンポーネントの表示が正しいこと", async () => {
     //Twitterアイコン
     expect(xIcon).toBeInTheDocument();
   });
-  console.log(mockgetUsers.mock.calls);
 });
 
 test("戻るボタンをクリックすると、/に遷移すること", async () => {

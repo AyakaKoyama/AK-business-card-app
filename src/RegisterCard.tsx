@@ -9,7 +9,7 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { addUserSkills, addUsers } from "./utils/supabaseFunctions";
+import { addUserSkills, addUserRecords } from "./utils/supabaseFunctions";
 import { User } from "./domain/user";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -37,7 +37,7 @@ export const RegisterCard = () => {
     console.log(data);
 
     try {
-      const addUserData = await addUsers(
+      const addUserData = await addUserRecords(
         data.loginID,
         data.userName,
         data.description,
@@ -74,7 +74,7 @@ export const RegisterCard = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Heading>新規登録</Heading>
+        <Heading data-testid="title">新規登録</Heading>
         <Box p={3}>
           <FormControl isInvalid={!!errors.loginID} isRequired>
             <FormLabel>好きな英単語</FormLabel>
