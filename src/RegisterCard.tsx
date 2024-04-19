@@ -79,6 +79,7 @@ export const RegisterCard = () => {
           <FormControl isInvalid={!!errors.loginID} isRequired>
             <FormLabel>好きな英単語</FormLabel>
             <Input
+              data-testid="login-id"
               placeholder=" "
               {...register("loginID", { pattern: /^[A-Za-z]+$/i })}
             />
@@ -91,6 +92,7 @@ export const RegisterCard = () => {
           <FormControl isInvalid={!!errors.userName} isRequired>
             <FormLabel>名前</FormLabel>
             <Input
+              data-testid="userName"
               placeholder="名前"
               {...register("userName", { required: true })}
             />
@@ -103,6 +105,7 @@ export const RegisterCard = () => {
           <FormControl isInvalid={!!errors.description} isRequired>
             <FormLabel>自己紹介</FormLabel>
             <Input
+              data-testid="description"
               placeholder="htmlタグも使えます"
               {...register("description", { required: true })}
             />
@@ -115,6 +118,7 @@ export const RegisterCard = () => {
           <FormControl isInvalid={!!errors.favoriteSkillID} isRequired>
             <FormLabel>好きな技術</FormLabel>
             <Select
+              data-testid="skill"
               placeholder="好きな技術"
               {...register("favoriteSkillID", { required: true })}
             >
@@ -153,7 +157,7 @@ export const RegisterCard = () => {
             <Input placeholder="X ID" {...register("xId")} />
           </FormControl>
         </Box>
-        <Button type="submit" colorScheme="green">
+        <Button data-testid="register-button" type="submit" colorScheme="green">
           新規登録
         </Button>
       </form>
