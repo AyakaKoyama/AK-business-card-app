@@ -2,25 +2,25 @@ import { BrowserRouter } from "react-router-dom";
 import { RegisterCard } from "../RegisterCard";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
+// ユーザー登録モック
+const mockAddUsers = jest.fn().mockResolvedValue({
+  loginID: "test",
+  userName: "Ayaka",
+  description: "description",
+  favoriteSkillID: "1",
+  githubId: "githubId",
+  qiitaId: "qiitaId",
+  xId: "xId",
+});
+
+// スキル登録モック
+const mockAddUserSkills = jest
+  .fn()
+  .mockResolvedValue({ loginID: "test", favoriteSkillID: "1" });
+
 jest.mock("../utils/supabaseFunctions", () => {
-  // ユーザー登録モック
-  const mockAddUsers = jest.fn().mockResolvedValue({
-    loginID: "test",
-    userName: "Ayaka",
-    description: "description",
-    favoriteSkillID: "1",
-    githubId: "githubId",
-    qiitaId: "qiitaId",
-    xId: "xId",
-  });
-
-  // スキル取得モック
-  const mockAddUserSkills = jest
-    .fn()
-    .mockResolvedValue({ loginID: "test", favoriteSkillID: "1" });
-
   return {
-    addUserRecords: mockAddUsers,
+    addUserRecords: () => mockAddUsers(),
     addUserSkills: (user_id: string, skill_id: string) =>
       mockAddUserSkills(user_id, skill_id),
   };
@@ -33,7 +33,7 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockedNavigator,
 }));
 
-test("RegisterCardコンポーネントの表示が正しいこと", async () => {
+test("タイトルが表示されること", async () => {
   render(
     <BrowserRouter>
       <RegisterCard />
@@ -42,33 +42,104 @@ test("RegisterCardコンポーネントの表示が正しいこと", async () =>
 
   await waitFor(() => {
     const title = screen.getByTestId("title");
-    //タイトル
     expect(title).toBeInTheDocument();
   });
+});
 
-  // エラーメッセージ表示
+test("ログインIDが未入力の場合にエラーメッセージが表示されること", async () => {
+  render(<RegisterCard />);
+
+  // 新規登録ボタンをクリック
+  const registerButton = screen.getByTestId("register-button");
+  fireEvent.click(registerButton);
+
+  // エラーメッセージが表示されるのを待機
   await waitFor(() => {
-    const loginId = screen.getByTestId("login-id");
-    const errorMessage = screen.getByText("英字で入力してください");
-    expect(loginId).toBeInTheDocument();
+    // エラーメッセージが表示されていることを確認
+    const errorMessage = screen.queryByText("ログインIDの入力は必須です");
     expect(errorMessage).toBeInTheDocument();
+  });
+});
 
+test("名前が未入力の場合にエラーメッセージが表示されること", async () => {
+  render(<RegisterCard />);
+
+  // 新規登録ボタンをクリック
+  const registerButton = screen.getByTestId("register-button");
+  fireEvent.click(registerButton);
+
+  // エラーメッセージが表示されるのを待機
+  await waitFor(() => {
+    // エラーメッセージが表示されていることを確認
+    const errorMessage = screen.queryByText("名前の入力は必須です");
+    expect(errorMessage).toBeInTheDocument();
+  });
+});
+
+test("自己紹介が未入力の場合にエラーメッセージが表示されること", async () => {
+  render(<RegisterCard />);
+
+  // 新規登録ボタンをクリック
+  const registerButton = screen.getByTestId("register-button");
+  fireEvent.click(registerButton);
+
+  // エラーメッセージが表示されるのを待機
+  await waitFor(() => {
+    // エラーメッセージが表示されていることを確認
+    const errorMessage = screen.queryByText("自己紹介の入力は必須です");
+    expect(errorMessage).toBeInTheDocument();
+  });
+});
+
+test("好きな技術が未選択の場合にエラーメッセージが表示されること", async () => {
+  render(<RegisterCard />);
+
+  // 新規登録ボタンをクリック
+  const registerButton = screen.getByTestId("register-button");
+  fireEvent.click(registerButton);
+
+  // エラーメッセージが表示されるのを待機
+  await waitFor(() => {
+    // エラーメッセージが表示されていることを確認
+    const errorMessage = screen.queryByText("選択は必須です");
+    expect(errorMessage).toBeInTheDocument();
+  });
+});
+
+test("登録ボタン押下後/に遷移すること", async () => {
+  render(
+    <BrowserRouter>
+      <RegisterCard />
+    </BrowserRouter>
+  );
+
+  await waitFor(() => {
+    // ログインIDを入力
+    const loginID = screen.getByTestId("login-id");
+    fireEvent.change(loginID, { target: { value: "test" } });
+    // 名前を入力
     const userName = screen.getByTestId("userName");
-    expect(userName).toBeInTheDocument();
-    expect(userName).toHaveTextContent("名前の入力は必須です");
-
+    fireEvent.change(userName, { target: { value: "Ayaka" } });
+    // 自己紹介を入力
     const description = screen.getByTestId("description");
-    expect(description).toBeInTheDocument();
-    expect(description).toHaveTextContent("自己紹介の入力は必須です");
+    fireEvent.change(description, { target: { value: "description" } });
+    // 好きな技術を選択
+    const favoriteSkillID = screen.getByTestId("skill");
+    fireEvent.change(favoriteSkillID, { target: { value: "1" } });
 
-    const skill = screen.getByTestId("skill");
-    expect(skill).toBeInTheDocument();
-    expect(skill).toHaveTextContent("選択は必須です");
+    // 新規登録ボタンをクリック
+    const registerButton = screen.getByTestId("register-button");
+    fireEvent.click(registerButton);
+  });
+  console.log(mockAddUsers);
+  //  ここでモック関数が呼び出されない
+  await waitFor(() => {
+    expect(mockAddUsers).toHaveBeenCalled();
+    console.log(mockAddUsers.mock.calls);
   });
 
-  // ユーザー登録
-  const regeisterButton = screen.getByTestId("register-button");
-  fireEvent.click(regeisterButton);
-
   expect(mockedNavigator).toHaveBeenCalledWith("/");
+
+  // ログを出力する
+  console.log("Navigation complete!");
 });

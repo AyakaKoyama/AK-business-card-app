@@ -53,6 +53,7 @@ export const RegisterCard = () => {
         data.favoriteSkillID
       );
       console.log(addUserSkillData);
+      console.log("=====================================");
 
       setUsers([
         {
@@ -76,83 +77,85 @@ export const RegisterCard = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Heading data-testid="title">新規登録</Heading>
         <Box p={3}>
-          <FormControl isInvalid={!!errors.loginID} isRequired>
+          <FormControl isInvalid={!!errors.loginID}>
             <FormLabel>好きな英単語</FormLabel>
             <Input
               data-testid="login-id"
               placeholder=" "
-              {...register("loginID", { pattern: /^[A-Za-z]+$/i })}
+              {...register("loginID", {
+                required: "ログインIDの入力は必須です",
+                pattern: {
+                  value: /^[A-Za-z]+$/i,
+                  message: "英字で入力してください",
+                },
+              })}
             />
             <FormErrorMessage>
-              {errors.loginID && "英字で入力してください"}
+              {errors.loginID && errors.loginID.message}
             </FormErrorMessage>
           </FormControl>
         </Box>
         <Box p={3}>
-          <FormControl isInvalid={!!errors.userName} isRequired>
+          <FormControl isInvalid={!!errors.userName}>
             <FormLabel>名前</FormLabel>
             <Input
               data-testid="userName"
               placeholder="名前"
-              {...register("userName", { required: true })}
+              {...register("userName", { required: "名前の入力は必須です" })}
             />
             <FormErrorMessage>
-              {errors.userName && "名前の入力は必須です"}
+              {errors.userName && errors.userName.message}
             </FormErrorMessage>
           </FormControl>
         </Box>
         <Box p={3}>
-          <FormControl isInvalid={!!errors.description} isRequired>
+          <FormControl isInvalid={!!errors.description}>
             <FormLabel>自己紹介</FormLabel>
             <Input
               data-testid="description"
               placeholder="htmlタグも使えます"
-              {...register("description", { required: true })}
+              {...register("description", {
+                required: "自己紹介の入力は必須です",
+              })}
             />
             <FormErrorMessage>
-              {errors.description && "自己紹介の入力は必須です"}
+              {errors.description && errors.description.message}
             </FormErrorMessage>
           </FormControl>
         </Box>
         <Box p={3}>
-          <FormControl isInvalid={!!errors.favoriteSkillID} isRequired>
+          <FormControl isInvalid={!!errors.favoriteSkillID}>
             <FormLabel>好きな技術</FormLabel>
             <Select
               data-testid="skill"
               placeholder="好きな技術"
-              {...register("favoriteSkillID", { required: true })}
+              {...register("favoriteSkillID", { required: "選択は必須です" })}
             >
               <option value="1">React</option>
               <option value="2">typeScript</option>
               <option value="3">Github</option>
             </Select>
             {errors.favoriteSkillID && (
-              <FormErrorMessage>選択は必須です</FormErrorMessage>
+              <FormErrorMessage>
+                {errors.favoriteSkillID && errors.favoriteSkillID.message}
+              </FormErrorMessage>
             )}
           </FormControl>
         </Box>
         <Box p={3}>
-          <FormControl
-            variant="floating"
-            id="github-id"
-            isInvalid={!!errors.githubId}
-          >
+          <FormControl variant="floating" id="github-id">
             <FormLabel>Github ID</FormLabel>
             <Input placeholder="Github ID" {...register("githubId")} />
           </FormControl>
         </Box>
         <Box p={3}>
-          <FormControl
-            variant="floating"
-            id="qiita-id"
-            isInvalid={!!errors.qiitaId}
-          >
+          <FormControl variant="floating" id="qiita-id">
             <FormLabel>Qiita ID</FormLabel>
             <Input placeholder="Qiita ID" {...register("qiitaId")} />
           </FormControl>
         </Box>
         <Box p={3}>
-          <FormControl variant="floating" id="x-id" isInvalid={!!errors.xId}>
+          <FormControl variant="floating" id="x-id">
             <FormLabel>X ID</FormLabel>
             <Input placeholder="X ID" {...register("xId")} />
           </FormControl>
