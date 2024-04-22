@@ -53,3 +53,35 @@ test("検索ボタン押下後/cards/:idに遷移すること", async () => {
   // ログを出力する
   console.log("Navigation complete!");
 });
+
+test("idを入力せずボタンを押すとエラーが出る", async () => {
+  render(
+    <BrowserRouter>
+      <SearchCard />
+    </BrowserRouter>
+  );
+  // 検索ボタンをクリック
+  const searchButton = screen.getByTestId("search-button");
+  fireEvent.click(searchButton);
+
+  await waitFor(() => {
+    const errorMessage = screen.queryByText("ログインIDの入力は必須です");
+    expect(errorMessage).toBeInTheDocument();
+  });
+});
+
+test("新規登録ボタンをクリックすると、/に遷移すること", async () => {
+  render(
+    <BrowserRouter>
+      <SearchCard />
+    </BrowserRouter>
+  );
+
+  await waitFor(() => {
+    const registerButton = screen.getByTestId("register-button");
+    fireEvent.click(registerButton);
+  });
+  console.log(mockedNavigator.mock.calls);
+
+  expect(mockedNavigator).toHaveBeenCalledWith("/cards/register");
+});

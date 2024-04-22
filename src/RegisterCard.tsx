@@ -75,10 +75,12 @@ export const RegisterCard = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Heading data-testid="title">新規登録</Heading>
+        <Heading data-testid="title" color="gray.700">
+          新規登録
+        </Heading>
         <Box p={3}>
           <FormControl isInvalid={!!errors.loginID}>
-            <FormLabel>ログインID(英字のみ可)</FormLabel>
+            <FormLabel color="#276749">ログインID(英字のみ可)</FormLabel>
             <Input
               data-testid="login-id"
               placeholder=" "
@@ -97,7 +99,7 @@ export const RegisterCard = () => {
         </Box>
         <Box p={3}>
           <FormControl isInvalid={!!errors.userName}>
-            <FormLabel>名前</FormLabel>
+            <FormLabel color="#276749">名前</FormLabel>
             <Input
               data-testid="userName"
               placeholder="名前"
@@ -110,7 +112,7 @@ export const RegisterCard = () => {
         </Box>
         <Box p={3}>
           <FormControl isInvalid={!!errors.description}>
-            <FormLabel>自己紹介</FormLabel>
+            <FormLabel color="#276749">自己紹介</FormLabel>
             <Input
               data-testid="description"
               placeholder="htmlタグも使えます"
@@ -125,7 +127,7 @@ export const RegisterCard = () => {
         </Box>
         <Box p={3}>
           <FormControl isInvalid={!!errors.favoriteSkillID}>
-            <FormLabel>好きな技術</FormLabel>
+            <FormLabel color="#276749">好きな技術</FormLabel>
             <Select
               data-testid="skill"
               placeholder="技術を選択"
@@ -144,7 +146,7 @@ export const RegisterCard = () => {
         </Box>
         <Box p={3}>
           <FormControl variant="floating" id="github-id">
-            <FormLabel>Github ID</FormLabel>
+            <FormLabel color="#276749">Github ID</FormLabel>
             <Input
               data-testid="github-id"
               placeholder="Github ID"
@@ -154,7 +156,7 @@ export const RegisterCard = () => {
         </Box>
         <Box p={3}>
           <FormControl variant="floating" id="qiita-id">
-            <FormLabel>Qiita ID</FormLabel>
+            <FormLabel color="#276749">Qiita ID</FormLabel>
             <Input
               data-testid="qiita-id"
               placeholder="Qiita ID"
@@ -164,11 +166,16 @@ export const RegisterCard = () => {
         </Box>
         <Box p={3}>
           <FormControl variant="floating" id="x-id">
-            <FormLabel>X ID</FormLabel>
+            <FormLabel color="#276749">X ID</FormLabel>
             <Input data-testid="x-id" placeholder="X ID" {...register("xId")} />
           </FormControl>
         </Box>
-        <Button data-testid="register-button" type="submit" colorScheme="green">
+        <Button
+          data-testid="register-button"
+          type="submit"
+          colorScheme="green"
+          variant="outline"
+        >
           新規登録
         </Button>
       </form>

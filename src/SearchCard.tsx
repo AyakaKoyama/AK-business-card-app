@@ -1,6 +1,7 @@
 import {
   Button,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
   Input,
@@ -46,24 +47,37 @@ export const SearchCard: React.FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Heading data-testid="title">ユーザー検索</Heading>
-      <FormControl isInvalid={!!errors.searchID} isRequired>
-        <FormLabel>ログインID</FormLabel>
+      <FormControl isInvalid={!!errors.searchID}>
+        <FormLabel mt={5}>ログインID</FormLabel>
         <Input
           data-testid="login-id"
           placeholder=""
           color="green"
           _placeholder={{ color: "inherit" }}
-          {...register("searchID", { required: true })}
+          {...register("searchID", {
+            required: "ログインIDの入力は必須です",
+          })}
         />
+        <FormErrorMessage>
+          {errors.searchID && errors.searchID.message}
+        </FormErrorMessage>
       </FormControl>
-      <Button data-testid="search-button" colorScheme="green" type="submit">
+      <Button
+        data-testid="search-button"
+        colorScheme="green"
+        mt={5}
+        type="submit"
+      >
         検索
       </Button>
 
       <Button
+        data-testid="register-button"
         colorScheme="green"
         color="green"
         variant="outline"
+        mt={5}
+        ml={2}
         onClick={OnClickRegister}
       >
         新規登録はこちら！
