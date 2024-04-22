@@ -127,6 +127,17 @@ test("登録ボタン押下後/に遷移すること", async () => {
     const favoriteSkillID = screen.getByTestId("skill");
     fireEvent.change(favoriteSkillID, { target: { value: "1" } });
 
+    //以下任意の項目を登録しなかった場合
+    // GitHub IDを入力
+    const githubId = screen.getByTestId("github-id");
+    fireEvent.change(githubId, { target: { value: "" } });
+    // Qiita IDを入力
+    const qiitaId = screen.getByTestId("qiita-id");
+    fireEvent.change(qiitaId, { target: { value: "" } });
+    // Twitter IDを入力
+    const xId = screen.getByTestId("x-id");
+    fireEvent.change(xId, { target: { value: "" } });
+
     // 新規登録ボタンをクリック
     const registerButton = screen.getByTestId("register-button");
     fireEvent.click(registerButton);
@@ -139,7 +150,4 @@ test("登録ボタン押下後/に遷移すること", async () => {
   });
 
   expect(mockedNavigator).toHaveBeenCalledWith("/");
-
-  // ログを出力する
-  console.log("Navigation complete!");
 });

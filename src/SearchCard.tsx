@@ -1,4 +1,11 @@
-import { Button, FormControl, FormLabel, Input, Text } from "@chakra-ui/react";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -32,20 +39,34 @@ export const SearchCard: React.FC = () => {
     }
     console.log(userNotFound);
   };
+  const OnClickRegister = () => {
+    navigate("/cards/register");
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <Heading data-testid="title">ユーザー検索</Heading>
       <FormControl isInvalid={!!errors.searchID} isRequired>
-        <FormLabel>ユーザーID</FormLabel>
+        <FormLabel>ログインID</FormLabel>
         <Input
+          data-testid="login-id"
           placeholder=""
           color="green"
           _placeholder={{ color: "inherit" }}
           {...register("searchID", { required: true })}
         />
       </FormControl>
-      <Button colorScheme="green" type="submit">
+      <Button data-testid="search-button" colorScheme="green" type="submit">
         検索
+      </Button>
+
+      <Button
+        colorScheme="green"
+        color="green"
+        variant="outline"
+        onClick={OnClickRegister}
+      >
+        新規登録はこちら！
       </Button>
       {/* エラーメッセージ */}
       {userNotFound && (

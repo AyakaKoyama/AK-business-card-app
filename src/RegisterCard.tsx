@@ -53,7 +53,6 @@ export const RegisterCard = () => {
         data.favoriteSkillID
       );
       console.log(addUserSkillData);
-      console.log("=====================================");
 
       setUsers([
         {
@@ -72,13 +71,14 @@ export const RegisterCard = () => {
       console.error("Failed to submit form data:", error);
     }
   };
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Heading data-testid="title">新規登録</Heading>
         <Box p={3}>
           <FormControl isInvalid={!!errors.loginID}>
-            <FormLabel>好きな英単語</FormLabel>
+            <FormLabel>ログインID(英字のみ可)</FormLabel>
             <Input
               data-testid="login-id"
               placeholder=" "
@@ -128,7 +128,7 @@ export const RegisterCard = () => {
             <FormLabel>好きな技術</FormLabel>
             <Select
               data-testid="skill"
-              placeholder="好きな技術"
+              placeholder="技術を選択"
               {...register("favoriteSkillID", { required: "選択は必須です" })}
             >
               <option value="1">React</option>
@@ -145,19 +145,27 @@ export const RegisterCard = () => {
         <Box p={3}>
           <FormControl variant="floating" id="github-id">
             <FormLabel>Github ID</FormLabel>
-            <Input placeholder="Github ID" {...register("githubId")} />
+            <Input
+              data-testid="github-id"
+              placeholder="Github ID"
+              {...register("githubId")}
+            />
           </FormControl>
         </Box>
         <Box p={3}>
           <FormControl variant="floating" id="qiita-id">
             <FormLabel>Qiita ID</FormLabel>
-            <Input placeholder="Qiita ID" {...register("qiitaId")} />
+            <Input
+              data-testid="qiita-id"
+              placeholder="Qiita ID"
+              {...register("qiitaId")}
+            />
           </FormControl>
         </Box>
         <Box p={3}>
           <FormControl variant="floating" id="x-id">
             <FormLabel>X ID</FormLabel>
-            <Input placeholder="X ID" {...register("xId")} />
+            <Input data-testid="x-id" placeholder="X ID" {...register("xId")} />
           </FormControl>
         </Box>
         <Button data-testid="register-button" type="submit" colorScheme="green">
