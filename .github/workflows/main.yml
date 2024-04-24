@@ -28,7 +28,7 @@ jobs:
     needs: build
     env:
       VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-      VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
