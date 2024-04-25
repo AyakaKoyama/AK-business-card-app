@@ -7,12 +7,19 @@ async function deleteUserData() {
   const yesterday = new Date(currentDate);
   yesterday.setDate(currentDate.getDate() - 1);
 
+  // 日付をUTC形式に変換
+  // const yesterdayUTC = yesterday.toISOString();
+  // console.log("yesterdayUTC:", yesterdayUTC);
+
   // 削除するユーザー情報の条件を指定
   const userDeleteResult = await supabase
     .from("users")
     .delete()
     // ここに削除条件を追加する
-    .match({ created_at: new Date(yesterday) });
+    .gte("created_at", yesterday)
+    .lte("created_at", currentDate);
+  console.log("yesterday:", yesterday);
+  console.log("currentDate:", currentDate);
 
   // 削除した行数をログに出力
   console.log("Deleted user data:", userDeleteResult);
@@ -22,7 +29,8 @@ async function deleteUserData() {
     .from("user_skill")
     .delete()
     // ここに削除条件を追加する
-    .match({ created_at: new Date(yesterday) });
+    .gte("created_at", yesterday)
+    .lte("created_at", currentDate);
 
   // 削除した行数をログに出力
   console.log("Deleted skill data:", skillDeleteResult);
