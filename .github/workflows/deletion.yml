@@ -1,0 +1,25 @@
+name: 6:00 Data Deletion
+
+on:
+  # Schedule to run every day at 21:00 UTC
+  schedule:
+    - cron: "0 21 * * *"
+
+jobs:
+  delete_data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run data deletion script
+        run: npx tsx ./batch/index.ts
