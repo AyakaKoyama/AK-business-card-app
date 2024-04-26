@@ -1,25 +1,25 @@
 import { supabase } from "../src/utils/supabase";
 
 async function deleteUserData() {
-  // 現在の日付を取得
-  const currentDate = new Date();
-  // 前日の日付を計算
-  const yesterday = new Date(currentDate);
-  yesterday.setDate(currentDate.getDate() - 1);
+  // 昨日の0:00のUTC
+  const startedYesterday = new Date();
+  startedYesterday.setDate(startedYesterday.getDate() - 1);
+  startedYesterday.setUTCHours(0, 0, 0, 0);
 
-  // 日付をUTC形式に変換
-  // const yesterdayUTC = yesterday.toISOString();
-  // console.log("yesterdayUTC:", yesterdayUTC);
+  // 昨日の23:59:59のUTC
+  const endedYesterday = new Date();
+  endedYesterday.setDate(endedYesterday.getDate() - 1);
+  endedYesterday.setUTCHours(23, 59, 59, 999);
 
   // 削除するユーザー情報の条件を指定
   const userDeleteResult = await supabase
     .from("users")
     .delete()
     // ここに削除条件を追加する
-    .gte("created_at", yesterday)
-    .lte("created_at", currentDate);
-  console.log("yesterday:", yesterday);
-  console.log("currentDate:", currentDate);
+    .gte("created_at", startedYesterday.toISOString())
+    .lte("created_at", endedYesterday.toISOString());
+  console.log("startedYesterday:", startedYesterday);
+  console.log("endedYesterday:", endedYesterday);
 
   // 削除した行数をログに出力
   console.log("Deleted user data:", userDeleteResult);
@@ -29,8 +29,8 @@ async function deleteUserData() {
     .from("user_skill")
     .delete()
     // ここに削除条件を追加する
-    .gte("created_at", yesterday)
-    .lte("created_at", currentDate);
+    .gte("created_at", startedYesterday.toISOString())
+    .lte("created_at", endedYesterday.toISOString());
 
   // 削除した行数をログに出力
   console.log("Deleted skill data:", skillDeleteResult);
