@@ -1,6 +1,7 @@
 name: 6:00 Data Deletion
 
 on:
+  workflow_dispatch:
   # Schedule to run every day at 21:00 UTC
   schedule:
     - cron: "0 21 * * *"
