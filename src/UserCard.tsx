@@ -21,7 +21,6 @@ import { SiQiita } from "react-icons/si";
 export const UserCard: React.FC = () => {
   const { loginID } = useParams<{ loginID: string }>();
   const [loading, setLoading] = useState(false);
-  //テスト時にnullになってしまう
   const [filteredUser, setFilteredUser] = useState<User | null>(null);
   const navigate = useNavigate();
 

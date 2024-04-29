@@ -170,14 +170,16 @@ export const RegisterCard = () => {
             <Input data-testid="x-id" placeholder="X ID" {...register("xId")} />
           </FormControl>
         </Box>
-        <Button
-          data-testid="register-button"
-          type="submit"
-          colorScheme="green"
-          variant="outline"
-        >
-          新規登録
-        </Button>
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <Button
+            data-testid="register-button"
+            type="submit"
+            colorScheme="green"
+            variant="outline"
+          >
+            新規登録
+          </Button>
+        </Box>
       </form>
     </>
   );

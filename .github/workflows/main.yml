@@ -3,9 +3,6 @@ name: Scheduled deploy
 on:
   push:
   workflow_dispatch:
-    # Schedule to run every day at 21:00 UTC
-  # schedule:
-  #   - cron: "0 21 * * *"
 
 jobs:
   build:
